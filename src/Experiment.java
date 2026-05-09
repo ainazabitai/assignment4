@@ -13,6 +13,7 @@ public class Experiment {
         long endDfs = System.nanoTime();
         long dfsTime = endDfs - startDfs;
 
+
         System.out.printf("BFS time: %d ns\n", bfsTime);
         System.out.printf("DFS time: %d ns\n", dfsTime);
         System.out.println("-------------------------");
