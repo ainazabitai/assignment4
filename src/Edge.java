@@ -19,4 +19,5 @@ public class Edge {
     public String toString() {
         return source + " -> " + destination;
     }
+
 }
