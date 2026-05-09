@@ -34,6 +34,44 @@ public class Graph {
         }
     }
 
+    public void bfs(int start) {
+        if (!adjList.containsKey(start)) {
+            System.out.println("Start vertex not found");
+            return;
+        }
+
+        Set<Integer> visited = new HashSet<>();
+        Queue<Integer> queue = new LinkedList<>();
+        visited.add(start);
+        queue.add(start);
+
+        System.out.print("BFS order: ");
+        while (!queue.isEmpty()) {
+            int current = queue.poll();
+            System.out.print(vertexMap.get(current) + " ");
+
+            for (int neighbor : adjList.get(current)) {
+                if (!visited.contains(neighbor)) {
+                    visited.add(neighbor);
+                    queue.add(neighbor);
+                }
+            }
+        }
+        System.out.println();
+    }
+
+    public void dfs(int start) {
+        if (!adjList.containsKey(start)) {
+            System.out.println("Start vertex not found");
+            return;
+        }
+
+        Set<Integer> visited = new HashSet<>();
+        System.out.print("DFS order: ");
+        dfsRecursive(start, visited);
+        System.out.println();
+    }
+
     private void dfsRecursive(int current, Set<Integer> visited) {
         visited.add(current);
         System.out.print(vertexMap.get(current) + " ");
