@@ -3,10 +3,16 @@ import java.util.*;
 public class Graph {
     private Map<Integer, List<Integer>> adjList;
     private Map<Integer, Vertex> vertexMap;
+    private boolean directed;
 
-    public Graph() {
+    public Graph(boolean directed) {
         adjList = new HashMap<>();
         vertexMap = new HashMap<>();
+        this.directed = directed;
+    }
+
+    public Graph() {
+        this(false);
     }
 
     public void addVertex(Vertex v) {
@@ -21,69 +27,110 @@ public class Graph {
         if (!adjList.containsKey(from) || !adjList.containsKey(to)) {
             throw new IllegalArgumentException("Vertex not found");
         }
+
         adjList.get(from).add(to);
+
+        if (!directed) {
+            adjList.get(to).add(from);
+        }
     }
 
     public void printGraph() {
-        for (int vertex : adjList.keySet()) {
-            System.out.print(vertexMap.get(vertex) + " -> ");
-            for (int neighbor : adjList.get(vertex)) {
-                System.out.print(vertexMap.get(neighbor) + " ");
+        System.out.println("\nGraph Structure (Adjacency List):");
+        for (int vertexId : adjList.keySet()) {
+            System.out.print("V" + vertexId + " -> ");
+            List<Integer> neighbors = adjList.get(vertexId);
+
+            System.out.print("[");
+            for (int i = 0; i < neighbors.size(); i++) {
+                System.out.print(neighbors.get(i));
+                if (i < neighbors.size() - 1) {
+                    System.out.print(", ");
+                }
             }
-            System.out.println();
+            System.out.println("]");
         }
     }
 
     public void bfs(int start) {
         if (!adjList.containsKey(start)) {
-            System.out.println("Start vertex not found");
+            System.out.println("Error: Start vertex " + start + " not found");
             return;
         }
 
         Set<Integer> visited = new HashSet<>();
         Queue<Integer> queue = new LinkedList<>();
+        List<Integer> order = new ArrayList<>();
+
         visited.add(start);
         queue.add(start);
 
-        System.out.print("BFS order: ");
         while (!queue.isEmpty()) {
             int current = queue.poll();
-            System.out.print(vertexMap.get(current) + " ");
+            order.add(current);
 
-            for (int neighbor : adjList.get(current)) {
+            List<Integer> neighbors = new ArrayList<>(adjList.get(current));
+            Collections.sort(neighbors);
+
+            for (int neighbor : neighbors) {
                 if (!visited.contains(neighbor)) {
                     visited.add(neighbor);
                     queue.add(neighbor);
                 }
             }
         }
+
+        System.out.print("BFS: ");
+        for (int i = 0; i < order.size(); i++) {
+            System.out.print("V" + order.get(i));
+            if (i < order.size() - 1) System.out.print(" ");
+        }
         System.out.println();
     }
 
     public void dfs(int start) {
         if (!adjList.containsKey(start)) {
-            System.out.println("Start vertex not found");
+            System.out.println("Error: Start vertex " + start + " not found");
             return;
         }
 
         Set<Integer> visited = new HashSet<>();
-        System.out.print("DFS order: ");
-        dfsRecursive(start, visited);
-        System.out.println();
-    }
+        Stack<Integer> stack = new Stack<>();
+        List<Integer> order = new ArrayList<>();
 
-    private void dfsRecursive(int current, Set<Integer> visited) {
-        visited.add(current);
-        System.out.print(vertexMap.get(current) + " ");
+        stack.push(start);
 
-        for (int neighbor : adjList.get(current)) {
-            if (!visited.contains(neighbor)) {
-                dfsRecursive(neighbor, visited);
+        while (!stack.isEmpty()) {
+            int current = stack.pop();
+
+            if (!visited.contains(current)) {
+                visited.add(current);
+                order.add(current);
+
+                List<Integer> neighbors = new ArrayList<>(adjList.get(current));
+                Collections.sort(neighbors, Collections.reverseOrder());
+
+                for (int neighbor : neighbors) {
+                    if (!visited.contains(neighbor)) {
+                        stack.push(neighbor);
+                    }
+                }
             }
         }
+
+        System.out.print("DFS: ");
+        for (int i = 0; i < order.size(); i++) {
+            System.out.print("V" + order.get(i));
+            if (i < order.size() - 1) System.out.print(" ");
+        }
+        System.out.println();
     }
 
     public Map<Integer, List<Integer>> getAdjList() {
         return adjList;
+    }
+
+    public int getVertexCount() {
+        return adjList.size();
     }
 }

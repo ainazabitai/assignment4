@@ -3,6 +3,11 @@ import java.util.*;
 public class Experiment {
 
     public static void runTraversals(Graph g, int startVertex) {
+        if (g.getVertexCount() == 0) {
+            System.out.println("Graph is empty!");
+            return;
+        }
+
         long startBfs = System.nanoTime();
         g.bfs(startVertex);
         long endBfs = System.nanoTime();
@@ -13,32 +18,43 @@ public class Experiment {
         long endDfs = System.nanoTime();
         long dfsTime = endDfs - startDfs;
 
-
-        System.out.printf("BFS time: %d ns\n", bfsTime);
-        System.out.printf("DFS time: %d ns\n", dfsTime);
+        System.out.printf("BFS time: %d ns (%.3f ms)\n", bfsTime, bfsTime / 1_000_000.0);
+        System.out.printf("DFS time: %d ns (%.3f ms)\n", dfsTime, dfsTime / 1_000_000.0);
         System.out.println("-------------------------");
     }
 
     public static void runMultipleTests() {
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("PERFORMANCE ANALYSIS");
+        System.out.println("=".repeat(60));
+
         int[] sizes = {10, 30, 100};
 
         for (int size : sizes) {
-            System.out.println("\n===== Graph with " + size + " vertices =====");
-            Graph g = new Graph();
+            System.out.println("\n--- Graph with " + size + " vertices ---");
+            Graph g = new Graph(false);
 
             for (int i = 0; i < size; i++) {
                 g.addVertex(new Vertex(i));
             }
 
-            Random rand = new Random();
-            for (int i = 0; i < size; i++) {
-                int numEdges = rand.nextInt(4) + 2; // 2 to 5 edges
-                for (int e = 0; e < numEdges; e++) {
-                    int to = (i + rand.nextInt(size / 2) + 1) % size;
-                    if (to != i) {
-                        g.addEdge(i, to);
-                    }
+            Random rand = new Random(42);
+
+            for (int i = 0; i < size - 1; i++) {
+                g.addEdge(i, i + 1);
+            }
+
+            int additionalEdges = size * 2;
+            for (int e = 0; e < additionalEdges; e++) {
+                int from = rand.nextInt(size);
+                int to = rand.nextInt(size);
+                if (from != to) {
+                    g.addEdge(from, to);
                 }
+            }
+
+            if (size == 10) {
+                g.printGraph();
             }
 
             runTraversals(g, 0);
@@ -46,10 +62,11 @@ public class Experiment {
     }
 
     public static void printResults() {
-        System.out.println("\n=== Performance Summary ===");
-        System.out.println("For small graphs (10 vertices): BFS and DFS are very fast (<1ms)");
-        System.out.println("For medium graphs (30 vertices): Slight increase in time");
-        System.out.println("For large graphs (100 vertices): Noticeable increase, but still efficient with O(V+E)");
-        System.out.println("In most tests, BFS is slightly slower due to queue overhead, DFS faster due to recursion (in Java, careful with deep recursion).");
+        System.out.println("\n" + "=".repeat(60));
+        System.out.println("RESULTS & ANALYSIS");
+        System.out.println("=".repeat(60));
+        System.out.println("Both BFS and DFS show O(V+E) linear complexity");
+        System.out.println("BFS explores level by level, DFS goes deep first");
+        System.out.println("Performance difference is minimal on sparse graphs");
     }
 }
