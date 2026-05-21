@@ -97,6 +97,47 @@ public class Graph {
 
     printDijkstraResults(start, distances, previous);
     }
+    private void printDijkstraResults(int start, int[] distances, int[] previous) {
+        System.out.println("\n============================================================");
+        System.out.println("DIJKSTRA'S ALGORITHM RESULTS");
+        System.out.println("Starting vertex: V" + start);
+        System.out.println("============================================================");
+
+        System.out.println("\nShortest distances from V" + start + ":");
+        System.out.println("Vertex\t\tDistance\tPath");
+        System.out.println("--------------------------------------------------");
+
+        for (int i = 0; i < distances.length; i++) {
+            if (i != start) {
+                System.out.print("V" + i + "\t\t");
+                if (distances[i] == Integer.MAX_VALUE) {
+                    System.out.print("∞\t\tNo path");
+                } else {
+                    System.out.print(distances[i] + "\t\t");
+                    printPath(previous, i);
+                }
+                System.out.println();
+            }
+        }
+        System.out.println("V" + start + "\t\t0\t\tV" + start);
+    }
+
+    private void printPath(int[] previous, int vertex) {
+        List<Integer> path = new ArrayList<>();
+        int current = vertex;
+
+        while (current != -1) {
+            path.add(current);
+            current = previous[current];
+        }
+
+        Collections.reverse(path);
+
+        for (int i = 0; i < path.size(); i++) {
+            System.out.print("V" + path.get(i));
+            if (i < path.size() - 1) System.out.print(" -> ");
+        }
+    }
     public void printGraph() {
         System.out.println("\nGraph Structure (Adjacency List):");
         for (int vertexId : adjList.keySet()) {
