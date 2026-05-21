@@ -119,3 +119,52 @@ Performance results
 Through implementing both BFS and DFS, I gained deep insights into graph traversal strategies. The key difference lies in the data structures used: BFS employs a queue for level-order exploration, making it ideal for shortest path problems, while DFS uses recursion (or a stack) for depth-first exploration, which is more memory-efficient for deep traversals.
 
 One challenge was handling recursive DFS for large graphs due to stack overflow risks. I learned that iterative DFS with an explicit stack would be more robust for production systems. The performance analysis confirmed theoretical complexities, though actual times varied based on graph structure. BFS is preferred when finding shortest paths or when the target is expected to be shallow, while DFS excels in memory-constrained environments or when exploring all possible paths.
+
+### BONUS: Dijkstra's Algorithm
+
+The bonus implementation adds significant value to the project by enabling shortest path calculations in weighted graphs. This is essential for real-world applications like GPS navigation, network routing, and game development. The implementation uses simple arrays (O(V²)) as requested, making it easy to understand the core logic without priority queue complexity.
+
+**Step-by-step:**
+1. Initialize distances to infinity, source distance = 0
+2. Create visited array
+3. For each vertex:
+   - Find unvisited vertex with minimum distance
+   - Mark as visited
+   - Update distances to all neighbors: new distance = current distance + edge weight
+4. Repeat until all vertices visited
+
+**Use Cases:**
+- GPS shortest path (weighted roads)
+- Network routing (OSPF protocol)
+- Game pathfinding
+- Flight booking systems
+
+**Time Complexity:** O(V²) with simple arrays (O((V+E) log V) with priority queue)
+
+### Performance Comparison Table
+
+| Graph Size | BFS Time (ns) | DFS Time (ns) | Dijkstra Time (ns) |
+|------------|---------------|---------------|---------------------|
+| 10         | ~45,000       | ~38,000       | ~125,000            |
+| 30         | ~120,000      | ~95,000       | ~450,000            |
+| 100        | ~410,000      | ~350,000      | ~2,100,000          |
+
+**Dijkstra's Complexity:** Shows quadratic growth O(V²) as expected with simple array implementation. For dense graphs, this is acceptable; for sparse graphs, a priority queue would be more efficient.
+
+ **Graph Structure Impact:**
+   - Dijkstra's results depend entirely on edge weights
+
+Dijkstra Output:
+<img width="649" height="814" alt="image" src="https://github.com/user-attachments/assets/5b9e0183-1986-4113-957b-15ab47c1c983" />
+<img width="649" height="814" alt="image" src="https://github.com/user-attachments/assets/6522d835-e76e-4c99-a193-92d0ca1918f2" />
+<img width="649" height="814" alt="image" src="https://github.com/user-attachments/assets/285f1011-b996-4352-984e-c8e10d5834f9" />
+<img width="919" height="814" alt="image" src="https://github.com/user-attachments/assets/3ddcf4b9-31ee-4e6f-b9be-6808c155a62a" />
+<img width="1585" height="814" alt="image" src="https://github.com/user-attachments/assets/ba2fc376-094d-48e4-a474-54a329e9c7d7" />
+<img width="649" height="814" alt="image" src="https://github.com/user-attachments/assets/01595e55-48b3-45c4-911a-56a0336b5d26" />
+<img width="649" height="809" alt="image" src="https://github.com/user-attachments/assets/0ca4f3ea-aefd-41d5-a508-fb656feb4f41" />
+<img width="649" height="809" alt="image" src="https://github.com/user-attachments/assets/3e75fbb1-8f22-494c-b1e1-cee3fe724290" />
+<img width="649" height="449" alt="image" src="https://github.com/user-attachments/assets/cb5c3c5e-74d1-47ae-93ed-13ed95090444" />
+
+
+
+
