@@ -1,8 +1,7 @@
 import java.util.*;
 
 public class Graph {
-    private Map<Integer, List<Integer>> adjList;
-    private Map<Integer, Vertex> vertexMap;
+    private Map<Integer, List<Edge>> adjList;  // Now stores weighted edges    private Map<Integer, Vertex> vertexMap;
     private boolean directed;
 
     public Graph(boolean directed) {
