@@ -8,19 +8,7 @@ public class Experiment {
             return;
         }
 
-        long startBfs = System.nanoTime();
-        g.bfs(startVertex);
-        long endBfs = System.nanoTime();
-        long bfsTime = endBfs - startBfs;
-
-        long startDfs = System.nanoTime();
-        g.dfs(startVertex);
-        long endDfs = System.nanoTime();
-        long dfsTime = endDfs - startDfs;
-
-        System.out.printf("BFS time: %d ns (%.3f ms)\n", bfsTime, bfsTime / 1_000_000.0);
-        System.out.printf("DFS time: %d ns (%.3f ms)\n", dfsTime, dfsTime / 1_000_000.0);
-        System.out.println("-------------------------");
+        g.runAllTraversals(startVertex);
     }
 
     public static void runMultipleTests() {
@@ -40,16 +28,20 @@ public class Experiment {
 
             Random rand = new Random(42);
 
+            // Create a path with random weights
             for (int i = 0; i < size - 1; i++) {
-                g.addEdge(i, i + 1);
+                int weight = rand.nextInt(20) + 1;  // weights 1-20
+                g.addEdge(i, i + 1, weight);
             }
 
+            // Add additional random edges with random weights
             int additionalEdges = size * 2;
             for (int e = 0; e < additionalEdges; e++) {
                 int from = rand.nextInt(size);
                 int to = rand.nextInt(size);
+                int weight = rand.nextInt(20) + 1;
                 if (from != to) {
-                    g.addEdge(from, to);
+                    g.addEdge(from, to, weight);
                 }
             }
 
@@ -63,10 +55,13 @@ public class Experiment {
 
     public static void printResults() {
         System.out.println("\n" + "=".repeat(60));
-        System.out.println("RESULTS & ANALYSIS");
+        System.out.println("ALGORITHM COMPLEXITY COMPARISON");
         System.out.println("=".repeat(60));
-        System.out.println("Both BFS and DFS show O(V+E) linear complexity");
-        System.out.println("BFS explores level by level, DFS goes deep first");
-        System.out.println("Performance difference is minimal on sparse graphs");
+        System.out.println("BFS:       O(V + E) - unweighted shortest path");
+        System.out.println("DFS:       O(V + E) - graph traversal");
+        System.out.println("Dijkstra:  O(V²) - weighted shortest path (simple implementation)");
+        System.out.println("\nDijkstra's algorithm finds the shortest path in weighted graphs");
+        System.out.println("BFS works only for unweighted graphs (all edges have same weight)");
+        System.out.println("DFS does not guarantee shortest path");
     }
 }
