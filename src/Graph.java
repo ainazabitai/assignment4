@@ -47,7 +47,56 @@ public class Graph {
             adjList.get(to).add(from);
         }
     }
+    public void dijkstra(int start) {
+    if (!adjList.containsKey(start)) {
+        System.out.println("Error: Start vertex " + start + " not found");
+        return;
+    }
 
+    int numVertices = adjList.size();
+    int[] distances = new int[numVertices];
+    boolean[] visited = new boolean[numVertices];
+    int[] previous = new int[numVertices];
+
+    // Initialize
+    for (int i = 0; i < numVertices; i++) {
+        distances[i] = Integer.MAX_VALUE;
+        previous[i] = -1;
+    }
+    distances[start] = 0;
+
+    // Main Dijkstra loop
+    for (int count = 0; count < numVertices - 1; count++) {
+        int minVertex = -1;
+        int minDistance = Integer.MAX_VALUE;
+
+        for (int v = 0; v < numVertices; v++) {
+            if (!visited[v] && distances[v] < minDistance) {
+                minDistance = distances[v];
+                minVertex = v;
+            }
+        }
+
+        if (minVertex == -1) break;
+
+        visited[minVertex] = true;
+
+        for (Edge edge : adjList.get(minVertex)) {
+            int neighbor = edge.getDestination().getId();
+            int weight = edge.getWeight();
+
+            if (!visited[neighbor] && distances[minVertex] != Integer.MAX_VALUE) {
+                int newDistance = distances[minVertex] + weight;
+                if (newDistance < distances[neighbor]) {
+                    distances[neighbor] = newDistance;
+                    previous[neighbor] = minVertex;
+                }
+            }
+        }
+    }
+
+    printDijkstraResults(start, distances, previous);
+    }
     public void printGraph() {
         System.out.println("\nGraph Structure (Adjacency List):");
         for (int vertexId : adjList.keySet()) {
