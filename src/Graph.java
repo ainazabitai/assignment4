@@ -22,11 +22,25 @@ public class Graph {
         }
     }
 
-    public void addEdge(int from, int to) {
+    // New method for weighted edges
+    public void addEdge(int from, int to, int weight) {
         if (!adjList.containsKey(from) || !adjList.containsKey(to)) {
             throw new IllegalArgumentException("Vertex not found");
         }
 
+        Vertex sourceVertex = vertexMap.get(from);
+        Vertex destVertex = vertexMap.get(to);
+
+        adjList.get(from).add(new Edge(sourceVertex, destVertex, weight));
+
+        if (!directed) {
+            adjList.get(to).add(new Edge(destVertex, sourceVertex, weight));
+        }
+    }
+
+    public void addEdge(int from, int to) {
+        addEdge(from, to, 1);
+    }
         adjList.get(from).add(to);
 
         if (!directed) {
